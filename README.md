@@ -5,6 +5,8 @@ A common usecase is the integration of SAMBA, so files can be accessed via netwo
 
 The solution was tested with Ubuntu 22.04 Server, but should be easy to adapt for other Linux distributions.
 
+Developed for our "cloudBox" solution (https://translate.google.com/translate?sl=de&tl=en&u=https://cloudbox.ull.at/)
+
 ## Problem
 
 When a file is created/changed/deleted in the filesystem (e.g. over Samba) updates are not recognized by Nextcloud.
