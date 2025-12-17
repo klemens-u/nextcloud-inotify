@@ -21,7 +21,7 @@ NEXTCLOUD_DATA_DIR="/srv/nextcloud"
 NEXTCLOUD_OCC_PATH="/var/www/nextcloud/occ"
 NEXTCLOUD_WWW_USER="www-data"
 # Set to true to enable debug output (e.g. occ files:scan details). 
-DEBUG=TRUE
+DEBUG=true
 
 # Validate input arguments
 if [ $# -lt 2 ]; then
