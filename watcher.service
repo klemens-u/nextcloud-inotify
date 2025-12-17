@@ -1,0 +1,15 @@
+[Unit]
+Description=Nextcloud Inotify Watcher
+Documentation=https://github.com/klemens-u/nextcloud-inotify
+After=network.target
+
+[Service]
+Type=forking
+ExecStart=/usr/local/bin/watcher.py start
+ExecStop=/usr/local/bin/watcher.py stop
+Restart=on-failure
+RestartSec=5
+PIDFile=/run/watcher.pid
+
+[Install]
+WantedBy=multi-user.target
