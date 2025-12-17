@@ -32,33 +32,36 @@ fs.inotify.max_user_watches=65536
 - `wget https://raw.githubusercontent.com/klemens-u/Watcher-Python3/master/watcher.py --directory-prefix /usr/local/bin`
   - The inotify watcher script. This was forked multiple times. My version works with Python3 on Ubuntu 22.04.
 - `wget https://raw.githubusercontent.com/klemens-u/nextcloud-inotify/main/watcher_nextcloud.sh --directory-prefix /usr/local/bin`
-  - A script by me which is called by `watcher.py` which triggers `occ files:scan` with the specific path where the change occured.
-  - Note: disable log in production. It get's huge!
+  - A script written by me which is called by `watcher.py` which triggers `occ files:scan` with the specific path where the change occured.
+  - The script has a `DEBUG` variable (default: `false`) that controls verbosity. Set to `true` for detailed output during testing, but keep it `false` in production to avoid huge logs.
+  - All output from this script is captured by `watcher.py` and logged to `/var/log/watcher.log` (no separate log file).
 - `chmod 700 /usr/local/bin/watcher*`
 - `wget https://raw.githubusercontent.com/klemens-u/nextcloud-inotify/main/watcher.ini --directory-prefix /etc`
 - `vi /etc/watcher.ini`
   - Adapt watcher configuration to your needs
-- `vi /etc/rc.local`
-```
-# Start watcher.py during boot. Notifies Nextcloud about filesystem changes
-watcher.py start
-```
+- `wget https://raw.githubusercontent.com/klemens-u/nextcloud-inotify/main/watcher.service --directory-prefix /etc/systemd/system`
+- `systemctl daemon-reload`
+- `systemctl enable watcher`
+- `systemctl start watcher`
+  - The watcher runs as a systemd service instead of via rc.local
 
 ## Start / Stop / Debug
-- `watcher.py stop`
+- `systemctl stop watcher`
   - Stop watching the nextcloud data dir. Important when copying large amounts of files.
-- `watcher.py restart`
+- `systemctl start watcher`
+  - Start the watcher service
+- `systemctl restart watcher`
   - Restart after config change
+- `systemctl status watcher`
+  - Check service status
 - `tail -f /var/log/watcher.log`
-  - View the main log
-- `tail -f /var/log/watcher_nextcloud.log `
-  - View the log of `watcher_nextcloud.sh`
+  - View the main log (includes output from both watcher.py and watcher_nextcloud.sh)
 
 
 ## Rotate Watcher Logfiles
 - `vi /etc/logrotate.d/watcher`
 ```
-/var/log/*watcher.log {
+/var/log/watcher.log {
         # Rotate daily
         daily
 
